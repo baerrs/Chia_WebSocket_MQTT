@@ -56,7 +56,7 @@ python -m pip install wheel
 
 python -m pip install paho-mqtt
 python -m pip install websocket-client
-python -m pip install websocket
+#python -m pip install websocket
 
 deactivate
 cp -r ~/.chia/mainnet/config/ssl/ ssl
