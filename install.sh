@@ -54,9 +54,7 @@ python -m pip install wheel
 #if [ "$INSTALL_PYTHON_VERSION" = "3.8" ]; then
 # This remains in case there is a diversion of binary wheels
 
-python -m pip install paho-mqtt
-python -m pip install websocket-client
-#python -m pip install websocket
+pip install -r requirements.txt
 
 deactivate
 cp -r ~/.chia/mainnet/config/ssl/ ssl
