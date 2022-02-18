@@ -238,8 +238,8 @@ wsapp = websocket.WebSocketApp("wss://localhost:55400",
                                on_ping=on_ping)
 
 
-key_crt = "ssl/daemon/private_daemon.crt"
-private_daemon_key ="ssl/daemon/private_daemon.key"
+key_crt = settings.key_crt
+private_daemon_key = settings.private_daemon_key
 
 wsapp.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE, "certfile": key_crt,
                           "keyfile": private_daemon_key, "ssl_context.check_hostname": False})

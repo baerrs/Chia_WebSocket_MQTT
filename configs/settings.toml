@@ -2,14 +2,14 @@
 
 [development]                    # All [environments] inherits values from [default] if defined
 host_name = "localhost"
-ssl_key = "ssl/key.pem"
-cert_key = "ssl/cert.pem"
+key_crt  = "ssl/daemon/private_daemon.crt"
+private_daemon_key = "ssl/daemon/private_daemon.key"
 log_file = "log/app.log"
 mqtt_header = "chia_wsocket_mqtt/"
 [production]
 host_name = "localhost"
-ssl_key = "ssl/key.pem"
-cert_key = "ssl/cert.pem"
+key_crt  = "ssl/daemon/private_daemon.crt"
+private_daemon_key = "ssl/daemon/private_daemon.key"
 log_file = "log/app.log"
 mqtt_header = "chia_ws"
 
