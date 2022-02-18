@@ -8,6 +8,7 @@ import chia.util.misc as chiasub
 import logging
 import logging.handlers
 import os
+from config import settings
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
 
@@ -19,7 +20,7 @@ if os.path.isdir(logdir):
 else:
     os.mkdir(logdir)
 handler = logging.handlers.RotatingFileHandler(
-    filename='log/app.log', maxBytes=(1048576*5), backupCount=7)
+    filename=settings.log_file, maxBytes=(1048576*5), backupCount=7)
 handler.setFormatter(formatter)
 #sends to stdout
 logging.getLogger().addHandler(logging.StreamHandler())

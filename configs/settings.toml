@@ -1,0 +1,16 @@
+# Values here will override previously loaded from default_settings.toml
+
+[development]                    # All [environments] inherits values from [default] if defined
+host_name = "localhost"
+ssl_key = "ssl/key.pem"
+cert_key = "ssl/cert.pem"
+log_file = "log/app.log"
+mqtt_header = "chia_wsocket_mqtt/"
+[production]
+host_name = "localhost"
+ssl_key = "ssl/key.pem"
+cert_key = "ssl/cert.pem"
+log_file = "log/app.log"
+mqtt_header = "chia_ws"
+
+# NOW go and read the `configs/.secrets.toml` file

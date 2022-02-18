@@ -9,8 +9,9 @@ import json
 from datetime import datetime
 import chia_ws_commands as chia_ws_commands
 import logging
+from config import settings
 
-logging.basicConfig(filename='log/app.log', filemode='w',format='%(asctime)s -%(levelname)s- %(message)s', level=logging.INFO)
+logging.basicConfig(filename=settings.log_file, filemode='w',format='%(asctime)s -%(levelname)s- %(message)s', level=logging.INFO)
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
