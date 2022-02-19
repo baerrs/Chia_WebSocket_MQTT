@@ -2,14 +2,14 @@
 
 [development]                    # All [environments] inherits values from [default] if defined
 host_name = "localhost"
-key_crt  = "ssl/daemon/private_daemon.crt"
-private_daemon_key = "ssl/daemon/private_daemon.key"
+key_crt  = "..< location of your ssl/daemon/private_daemon.crt >"
+private_daemon_key = "< location of your ssl/daemon/private_daemon.ke ?"
 log_file = "log/app.log"
 mqtt_header = "chia_wsocket_mqtt/"
 [production]
 host_name = "localhost"
-key_crt  = "ssl/daemon/private_daemon.crt"
-private_daemon_key = "ssl/daemon/private_daemon.key"
+key_crt  = "< location of your ssl/daemon/private_daemon.crt >"
+private_daemon_key = "< location of your ssl/daemon/private_daemon.key >"
 log_file = "log/app.log"
 mqtt_header = "chia_ws"
 
