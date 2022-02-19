@@ -6,7 +6,7 @@ def message_send(client, message_dic, c=""):
         if c == "":
             mqtt_topic = mqtt_base_topic + "{0}" .format(key)
         else:
-            mqtt_base_topic =  settings.mqtt_header + str(c) + "/"
+            mqtt_base_topic =  settings.mqtt_header + "connections/" + str(c) + "/"
             mqtt_topic = mqtt_base_topic + "{0}" .format(key)
         client.publish(mqtt_topic, value)
 
