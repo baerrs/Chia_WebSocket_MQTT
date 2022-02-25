@@ -199,6 +199,11 @@ def register_service(message):
                 log_message = '{0}: Connected to chia_wallet service: {1}'.format(inspect.stack()[0][3],
                                                                            message['data']['success'])
                 logging.info(log_message)
+        else:
+            log_message = '{0}: ***************Unhandled register_service message: {1}'.format(inspect.stack()[0][3],
+                                                                           json.dumps(message, indent=4, sort_keys=True))
+            logging.error(log_message)
+
                 #
                 # print('{0}: {1}: Connected to chia_wallet service: {2}'.format(datetime.now(), inspect.stack()[0][3],
                 #                                                            message['data']['success']))
@@ -254,6 +259,7 @@ def get_blockchain_state(message, client):
         total_iters = message['data']['blockchain_state']['peak']['total_iters']
         # weight = message['data']['blockchain_state']['peak']['weight']
         space = message['data']['blockchain_state']['space']
+        space = chiasub.format_bytes(space)
         sub_slot_iters = message['data']['blockchain_state']['sub_slot_iters']
         sync_mode = message['data']['blockchain_state']['sync']['sync_mode']
         sync_progress_height = message['data']['blockchain_state']['sync']['sync_progress_height']
@@ -321,6 +327,28 @@ def get_height_info(message):
         # print("x" * 100)
         # traceback.print_exc()
         # print("x" * 100)
+
+def get_wallet_balance(message, client):
+    try:
+        command = message['command']
+        balance = message['data']['wallet_balance']['confirmed_wallet_balance']
+        destination = message['destination']
+        origin = message['origin']
+        request_id = message['request_id']
+        if cp.message_debug[inspect.stack()[0][3]] == "True":
+            message = '{0}: get_wallet_balance:  command: {1}, balance: {2}, destination: {3}, origin: {4}, request_id: {5}'.format(datetime.now(), command, balance, destination, origin, request_id)
+            logging.info(message)
+        message_dic ={}
+        for variable2publish in ["balance"]:
+            message_dic[variable2publish] = eval(variable2publish)
+        ms.message_send(client, message_dic, c="")
+    except:
+        message = '{0}: Got message:'.format(inspect.stack()[0][3])
+        logging.error(json.dumps(message, indent=4, sort_keys=True))
+        logging.error(traceback.format_exc())
+
+
+
 
 def get_unfinished_block_headers(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
