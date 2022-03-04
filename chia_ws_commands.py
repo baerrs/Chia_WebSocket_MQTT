@@ -9,6 +9,7 @@ import logging
 import logging.handlers
 import os
 from config import settings
+import wallet_rpc
 
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
@@ -362,6 +363,32 @@ def get_wallet_balance(message, client):
         logging.error(json.dumps(message, indent=4, sort_keys=True))
         logging.error(traceback.format_exc())
 
+def get_wallet_balance_rpc(message, client):
+    try:
+        confirmed_wallet_balance = message['wallet_balance']['confirmed_wallet_balance']
+        max_send_amount = message['wallet_balance']['max_send_amount']
+        pending_change = message['wallet_balance']['pending_change']
+        pending_coin_removal_count = message['wallet_balance']['pending_coin_removal_count']
+        spendable_balance = message['wallet_balance']['spendable_balance']
+        unconfirmed_wallet_balance = message['wallet_balance']['unconfirmed_wallet_balance']
+        unspent_coin_count = message['wallet_balance']['unspent_coin_count']
+        message_dic = {}
+        for variable2publish in ["confirmed_wallet_balance", "max_send_amount", "pending_change",
+                                 "pending_coin_removal_count",
+                                 "spendable_balance", "unconfirmed_wallet_balance", "unspent_coin_count"]:
+            message_dic[variable2publish] = eval(variable2publish)
+        ms.message_send(client, message_dic, c="")
+        log_message = '{0}:  Confirmed Wallet Balance: {1} Max Spend Amount: {2} Pending Change: ' \
+                      '{3} Pending Coin Removal Cound: {4} Spendable Ballance: {5} Unconfirmed Wallet Balance: {6}'\
+                      ' Unspent Coin Count {7}'.format(inspect.stack()[0][3], confirmed_wallet_balance,
+                                                       max_send_amount, pending_change, pending_coin_removal_count,
+                                                       spendable_balance, unconfirmed_wallet_balance,
+                                                       unspent_coin_count)
+        logging.info(log_message)
+    except:
+        message = '{0}: Got message:'.format(inspect.stack()[0][3])
+        logging.error(json.dumps(message, indent=4, sort_keys=True))
+        logging.error(traceback.format_exc())
 
 def get_unfinished_block_headers(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":

@@ -1,3 +1,7 @@
 paho-mqtt~=1.6.1
 websocket-client~=1.2.3
 dynaconf~=3.1.7
+colorama~=0.4.4
+click~=8.0.4
+requests~=2.27.1
+urllib3~=1.26.8

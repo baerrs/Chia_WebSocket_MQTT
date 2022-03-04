@@ -9,6 +9,7 @@ import json
 from datetime import datetime
 import chia_ws_commands as chia_ws_commands
 import logging
+import wallet_rpc
 from config import settings
 
 logging.basicConfig(filename=settings.log_file, filemode='w',format='%(asctime)s -%(levelname)s- %(message)s', level=logging.INFO)
@@ -29,8 +30,10 @@ def on_connect(client, userdata, flags, rc):
         logging.error(message)
 
 
-# websocket.enableTrace(True)
+# websocket.enableTrace(True).
+c = 0
 def on_message(ws, message):
+    global c
     message = json.loads(message)
     command = message['command']
     if command == 'new_farming_info':
@@ -181,6 +184,15 @@ def on_message(ws, message):
                                                         json.dumps(message, indent=4, sort_keys=True))
         logging.critical(message)
         #logging.critical("x" * 100)
+    ''' I dont like this method to get the wallet balance, but I haven't figured out how to get it to broadcast from the 
+    wallet with out logging in the the chia GUI, so this is it for now...  I do have a question on chia's git hub about this
+    Hopefully someone smarting than me will help out. Maybe'''
+    c = c + 1
+    if c == 1:
+        message = wallet_rpc.get_balance()
+        chia_ws_commands.get_wallet_balance_rpc(message, client)
+    elif c >= 20:
+        c = 0
 
 
 def on_error(self, error):
