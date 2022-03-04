@@ -8,3 +8,6 @@ chmod +x install.sh<br>
 <br>
 . ./activate<br>
 python main.py<br>
+
+
+I want to get the wallet balacne.  When running this program, if i start Chia's GUI the get_wallet_balance message is brodcasted and I can send read the data and pbulish to the MQTT servetr.  I inishually thought i had to send the request via websockts, but the more I'm reading its a subscirbe/publish websocket broker.  I need to understand how this is being done so I can implement it.  
