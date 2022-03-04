@@ -12,7 +12,7 @@ import logging
 from config import settings
 
 logging.basicConfig(filename=settings.log_file, filemode='w',format='%(asctime)s -%(levelname)s- %(message)s', level=logging.INFO)
-print("starting main.py")
+
 def on_connect(client, userdata, flags, rc):
     if rc==0:
         client.connected_flag=True #set flag
@@ -32,7 +32,6 @@ def on_connect(client, userdata, flags, rc):
 # websocket.enableTrace(True)
 def on_message(ws, message):
     message = json.loads(message)
-
     command = message['command']
     if command == 'new_farming_info':
         chia_ws_commands.new_farming_info(message, client)
@@ -113,12 +112,6 @@ def on_message(ws, message):
     elif command == 'get_wallet_balance':
         chia_ws_commands.get_wallet_balance(message, client)
         x=1
-        print("="*100)
-        print("=" * 100)
-        print(message)
-        print("=" * 100)
-        print("=" * 100)
-
     # {'ack': True, 'command': 'get_wallet_balance', 'data': {'success': True,
     #                                                         'wallet_balance': {'confirmed_wallet_balance': 0,
     #                                                                            'max_send_amount': 0,
@@ -180,10 +173,10 @@ def on_message(ws, message):
     elif command == 'get_height_info':
         chia_ws_commands.get_height_info(message)
     else:
-        message2 = "&&&&&&&&&&&&&&&&&&&& &&&&&&&&&&&&&&&&&&&&&&"
+        message = "connected OK Returned code={0}".format(rc)
         #logging.critical("x" * 100)
-        logging.error(message2)
-        logging.error(json.dumps(message))
+        logging.critical(message)
+        logging.critical(json.dumps(message))
         message ='{0}: Unhandled message: {1}'.format(inspect.stack()[0][3],
                                                         json.dumps(message, indent=4, sort_keys=True))
         logging.critical(message)
@@ -209,18 +202,9 @@ def on_open(self):
     message = {"destination": "daemon", "command": "register_service", "request_id": "123456w", "origin": "",
                "data": {"service": 'wallet_ui'}}
     on_send_message(self, message)
-    ######################### trying to get get_bl
-    message = {"destination": "wallet", "ack": True, "command": "get_wallet_balance", "request_id": "123456w",
-               "origin": "ui",
-               "data": {"wallet_id": 1}}
+    message = {"destination": "full_node", "command": "get_blockchain_state", "request_id": "123456ca", "origin": "",
+               "data": {"service": 'full_node'}}
     on_send_message(self, message)
-    # message = {"destination": "full_node", "command": "get_blockchain_state", "request_id": "123456ca", "origin": "",
-    #            "data": {"service": 'full_node'}}
-    # on_send_message(self, message)
-    #
-    # message = {"destination": "daemon", "command": "register_service", "request_id": "123456h", "origin": "",
-    #            "data": {"service": 'harvester'}}
-    # on_send_message(self, message)
 
 
 def on_send_message(ws, message):

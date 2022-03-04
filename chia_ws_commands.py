@@ -9,6 +9,7 @@ import logging
 import logging.handlers
 import os
 from config import settings
+
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
 
@@ -20,16 +21,19 @@ if os.path.isdir(logdir):
 else:
     os.mkdir(logdir)
 handler = logging.handlers.RotatingFileHandler(
-    filename=settings.log_file, maxBytes=(1048576*5), backupCount=7)
+    filename=settings.log_file, maxBytes=(1048576 * 5), backupCount=7)
 handler.setFormatter(formatter)
-#sends to stdout
+# sends to stdout
 logging.getLogger().addHandler(logging.StreamHandler())
 logger.addHandler(handler)
-# logging.basicConfig(filename='log/app.log', filemode='w',format='%(asctime)s -%(levelname)s- %(message)s', level=logging.INFO)
+
+
+# logging.basicConfig(filename='log/app.log', filemode='w',format='%(asctime)s -%(levelname)s- %(message)s',
+# level=logging.INFO)
 
 
 def new_farming_info(message, client):
-    message_dic ={}
+    message_dic = {}
     try:
         dt = str(format(datetime.now()))
         command = message['command']
@@ -48,14 +52,14 @@ def new_farming_info(message, client):
         Create dictionary of message to send to mqtt server
         Edit list to add new fields
         '''
-        for variable2publish in ["total_plots", "passed_filter", "challenge_hash", "proofs", "signage_point", "timestamp", "total_plots"]:
+        for variable2publish in ["total_plots", "passed_filter", "challenge_hash", "proofs", "signage_point",
+                                 "timestamp", "total_plots"]:
             message_dic[variable2publish] = eval(variable2publish)
         ms.message_send(client, message_dic)
 
         if cp.message_debug[inspect.stack()[0][3]] == "True":
-            log_message = '{0}: {1} plots were eligible for farming  {2}... Found {3} proofs'.format(inspect.stack()[0][3],
-                                                                                              passed_filter,
-                                                                                              challenge_hash, proofs)
+            log_message = '{0}: {1} plots were eligible for farming  {2}... Found {3} proofs' \
+                .format(inspect.stack()[0][3], passed_filter, challenge_hash, proofs)
             logging.info(log_message)
 
     except:
@@ -93,24 +97,30 @@ def get_connections(message, client):
                 ms.message_send(client, message_dic, c)
                 if cp.message_debug[inspect.stack()[0][3]] == "True":
                     log_message = '{0}:  IP address: {1} Read: {2} Written: {3}'.format(inspect.stack()[0][3],
-                                                                           peer_host, bytes_read,bytes_written)
+                                                                                        peer_host, bytes_read,
+                                                                                        bytes_written)
                     logging.info(log_message)
             else:
                 peak_hash = message['data']['connections'][c]['peak_hash']
                 peak_height = message['data']['connections'][c]['peak_height']
                 peak_weight = message['data']['connections'][c]['peak_weight']
-                message_dic={}
-                for variable2publish in ["bytes_read", "bytes_written","last_message_time","node_id","peer_host",
-                                         "peak_height","creation_time"]:
+                message_dic = {}
+                for variable2publish in ["bytes_read", "bytes_written", "last_message_time", "node_id", "peer_host",
+                                         "peak_height", "creation_time"]:
                     message_dic[variable2publish] = eval(variable2publish)
                 ms.message_send(client, message_dic, c)
                 if cp.message_debug[inspect.stack()[0][3]] == "True":
-                    log_message = '{0}:  IP address: {1} Peak Height: {2} Read: {3} Written: {4}'.format(inspect.stack()[0][3],
-                           peer_host, peak_height,bytes_read,bytes_written)
+                    log_message = '{0}:  IP address: {1} Peak Height: {2} Read: {3} Written: {4}'.format(
+                        inspect.stack()[0][3],
+                        peer_host, peak_height, bytes_read, bytes_written)
                     logging.info(log_message)
             ''' ToDo: implement peak_wight '''
-            # peak_weight = messages['data']['connections'][c]['peak_weight']
-            # print('peak_weight: {0}'.format(peak_weight))
+            ''' 
+            The c variable is here to implement the for lookup of the wallet balance if i need to do it via an rpc 
+            call.  I'm trying to get the wallet balance from the websocket demon broadcast function call but it is not 
+            working.  I'm not sure why.  If i open the GUI I get the wallet balance.  I'm not sure what the  GIU is 
+            doing to get this data.  
+            '''
             c += 1
     except Exception as e:
         log_message = '{0}: Unhandled new_farming_info message: '.format(inspect.stack()[0][3])
@@ -123,7 +133,7 @@ def get_connections(message, client):
 
 
 def new_signage_point(message, client):
-    message_dic ={}
+    message_dic = {}
     command = message['command']
     challenge_chain_sp = message['data']['signage_point']['challenge_chain_sp'][2:12]
     challenge_hash = message['data']['signage_point']['challenge_hash']
@@ -137,15 +147,16 @@ def new_signage_point(message, client):
     request_id = message['request_id']
 
     try:
-        for variable2publish in ["challenge_chain_sp", "reward_chain_sp", "signage_point_index", "challenge_chain_sp", "reward_chain_sp"]:
+        for variable2publish in ["challenge_chain_sp", "reward_chain_sp", "signage_point_index", "challenge_chain_sp",
+                                 "reward_chain_sp"]:
             message_dic[variable2publish] = eval(variable2publish)
         ms.message_send(client, message_dic, c="")
         if cp.message_debug[inspect.stack()[0][3]] == "True":
             log_message = '{0}: finished signage point {1}/64  CC: {2} RC: {3}'.format(inspect.stack()[0][3],
-                                                                                signage_point_index, challenge_chain_sp,
-                                                                                reward_chain_sp)
+                                                                                       signage_point_index,
+                                                                                       challenge_chain_sp,
+                                                                                       reward_chain_sp)
             logging.info(log_message)
-
 
     except:
         log_message = '{0}: Unhandled new_signage_point message: '.format(inspect.stack()[0][3])
@@ -170,16 +181,15 @@ def state_changed(message):
         elif message['data']['state'] == 'sync_changed':
             if cp.message_debug[inspect.stack()[0][3]] == "True":
                 log_message = '{0}: new_block added sync_changed: {1}'.format(inspect.stack()[0][3],
-                                                                       message['data']['success'])
+                                                                              message['data']['success'])
 
     except:
-        log_message = '{0}:Unhandled message: {1}'.format(inspect.stack()[0][3])
+        log_message = '{0}:Unhandled message: {1}'.format(inspect.stack()[0][3], message)
         logging.error(log_message)
         log_message = traceback.print_exc()
         logging.error(log_message)
         log_message = json.dumps(message, indent=4, sort_keys=True)
         logging.error(log_message)
-
 
 
 def register_service(message):
@@ -192,33 +202,25 @@ def register_service(message):
         if message['request_id'] == '123456ca':
             if cp.message_debug[inspect.stack()[0][3]] == "True":
                 log_message = '{0}: Connected to chia_agent service: {1}'.format(inspect.stack()[0][3],
-                                                                          message['data']['success'])
+                                                                                 message['data']['success'])
                 logging.info(log_message)
         elif message['request_id'] == '123456w':
             if cp.message_debug[inspect.stack()[0][3]] == "True":
                 log_message = '{0}: Connected to chia_wallet service: {1}'.format(inspect.stack()[0][3],
-                                                                           message['data']['success'])
+                                                                                  message['data']['success'])
                 logging.info(log_message)
         else:
-            log_message = '{0}: ***************Unhandled register_service message: {1}'.format(inspect.stack()[0][3],
-                                                                           json.dumps(message, indent=4, sort_keys=True))
+            log_message = '{0}: ***************Unhandled register_service message: {1}'\
+                .format(inspect.stack()[0][3], json.dumps(message, indent=4, sort_keys=True))
             logging.error(log_message)
 
-                #
-                # print('{0}: {1}: Connected to chia_wallet service: {2}'.format(datetime.now(), inspect.stack()[0][3],
-                #                                                            message['data']['success']))
     except:
-        # print("x" * 100)
-        message = '{1}: Unhandled message: {2}'.format(inspect.stack()[0][3],
-                                                        json.dumps(message, indent=4, sort_keys=True))
+        message = '{0}: Unhandled message: {1}'.format(inspect.stack()[0][3],
+                                                       json.dumps(message, indent=4, sort_keys=True))
         logging.error(message)
-        # print('{0}: {1}: Unhandled message: {2}'.format(datetime.now(), inspect.stack()[0][3],
-        #                                                 json.dumps(message, indent=4, sort_keys=True)))
-        # print("x" * 100)
 
 
 def get_blockchain_state(message, client):
-
     try:
         command = message['command']
         difficulty = message['data']['blockchain_state']['difficulty']
@@ -238,8 +240,7 @@ def get_blockchain_state(message, client):
 
         if 'infused_challenged_vdf_output' in message['data']['blockchain_state']['peak']:
             if "data" in message['data']['blockchain_state']['peak']['infused_challenge_vdf_output']:
-                infused_challenge_vdf_output = message['data']['blockchain_state']['peak']['infused_challenge_vdf_output'][
-                    'data']
+                infused_challenge_vdf_output = message['data']['blockchain_state']['peak']['infused_challenge_vdf_output']['data']
             else:
                 infused_challenge_vdf_output = "N/A"
         else:
@@ -289,16 +290,19 @@ def get_blockchain_state(message, client):
         generator_ref_list_size = "??"
         header_hash = header_hash[:6]
         rh = rh[:6]
-        message_dic ={}
-        for variable2publish in ["mempool_size","space", "peak_height", "weight", "header_hash", "forked", "difficulty","sub_slot_iters"]:
+        message_dic = {}
+        for variable2publish in ["mempool_size", "space", "peak_height", "weight", "header_hash", "forked",
+                                 "difficulty", "sub_slot_iters"]:
             message_dic[variable2publish] = eval(variable2publish)
         ms.message_send(client, message_dic, c="")
         if cp.message_debug[inspect.stack()[0][3]] == "True":
-            message = '{0}: height {1}, weight {2}, hh {3} forked at {4}, rh {5}, total iters: {6}, overflow: {7}, deficit: {8}, difficulty: {9}, sub slot iters: {10}, Generator size: {11}, Generator ref list size: {12}'.format(inspect.stack()[0][3], peak_height, weight, header_hash, forked, rh, total_iters,
-                    overflow, deficit,
-                    difficulty, sub_slot_iters, generator_size, generator_ref_list_size)
+            message = '{0}: height {1}, weight {2}, hh {3} forked at {4}, rh {5}, total iters: {6}, overflow: {7}, ' \
+                      'deficit: {8}, difficulty: {9}, sub slot iters: {10}, Generator size: {11}, ' \
+                      'Generator ref list size: {12}'.format(
+                inspect.stack()[0][3], peak_height, weight, header_hash, forked, rh, total_iters,
+                overflow, deficit,
+                difficulty, sub_slot_iters, generator_size, generator_ref_list_size)
             logging.info(message)
-
 
     except:
         message = '{0}: Got message:'.format(inspect.stack()[0][3])
@@ -309,66 +313,80 @@ def get_blockchain_state(message, client):
 def get_height_info(message):
     try:
         command = message['command']
-        height= message['data']['height']
+        height = message['data']['height']
         destination = message['destination']
         origin = message['origin']
         request_id = message['request_id']
         if cp.message_debug[inspect.stack()[0][3]] == "True":
-            # print('{0}: get_height_info:  command: {1}, height: {2}, destination: {3}, origin: {4}, request_id: {5}'.format(datetime.now(), command, height, destination, origin, request_id))
-            message = 'get_height_info:  height: {0}, destination: {1}, origin: {2}, request_id: {3}'.format(height, destination, origin, request_id)
+            message = 'get_height_info:  height: {0}, destination: {1}, origin: {2}, request_id: {3}'.format(height,
+                                                                                                             destination,
+                                                                                                             origin,
+                                                                                                             request_id)
             logging.info(message)
     except:
         message = 'unhandled error message in:{0}'.format(datetime.now(), inspect.stack()[0][3])
         logging.error(json.dumps(message, indent=4, sort_keys=True))
         logging.error(traceback.format_exc())
-        # print("x" * 100)
-        # print('{0}:  unhandled error message in:{1}'.format(datetime.now(), inspect.stack()[0][3]))
-        # print(json.dumps(message, indent=4, sort_keys=True))
-        # print("x" * 100)
-        # traceback.print_exc()
-        # print("x" * 100)
+
 
 def get_wallet_balance(message, client):
     try:
+        # logging.error(json.dumps(message, indent=4, sort_keys=True))
         command = message['command']
-        balance = message['data']['wallet_balance']['confirmed_wallet_balance']
+        confirmed_wallet_balance = message['data']['wallet_balance']['confirmed_wallet_balance']
+        max_send_amount = message['data']['wallet_balance']['max_send_amount']
+        pending_change = message['data']['wallet_balance']['pending_change']
+        pending_coin_removal_count = message['data']['wallet_balance']['pending_coin_removal_count']
+        spendable_balance = message['data']['wallet_balance']['spendable_balance']
+        unconfirmed_wallet_balance = message['data']['wallet_balance']['unconfirmed_wallet_balance']
+        unspent_coin_count = message['data']['wallet_balance']['unspent_coin_count']
         destination = message['destination']
         origin = message['origin']
         request_id = message['request_id']
-        if cp.message_debug[inspect.stack()[0][3]] == "True":
-            message = '{0}: get_wallet_balance:  command: {1}, balance: {2}, destination: {3}, origin: {4}, request_id: {5}'.format(datetime.now(), command, balance, destination, origin, request_id)
-            logging.info(message)
-        message_dic ={}
-        for variable2publish in ["balance"]:
+        message_dic = {}
+        for variable2publish in ["confirmed_wallet_balance", "max_send_amount", "pending_change",
+                                 "pending_coin_removal_count",
+                                 "spendable_balance", "unconfirmed_wallet_balance", "unspent_coin_count"]:
             message_dic[variable2publish] = eval(variable2publish)
         ms.message_send(client, message_dic, c="")
+        if cp.message_debug[inspect.stack()[0][3]] == "True":
+            log_message = '{0}:  Confirmed Wallet Balance: {1} Max Spend Amount: {2} Pending Change: ' \
+                          '{3} Pending Coin Removal Cound: {4} Spendable Ballance: {5} Unconfirmed Wallet Balance: {6}'\
+                          ' Unspent Coin Count {7}'.format(inspect.stack()[0][3], confirmed_wallet_balance,
+                                                           max_send_amount, pending_change, pending_coin_removal_count,
+                                                           spendable_balance, unconfirmed_wallet_balance,
+                                                           unspent_coin_count)
+            logging.info(log_message)
     except:
         message = '{0}: Got message:'.format(inspect.stack()[0][3])
         logging.error(json.dumps(message, indent=4, sort_keys=True))
         logging.error(traceback.format_exc())
 
 
-
-
 def get_unfinished_block_headers(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
-        # print('{0}: get_unfinished_block_headers:  ---------------- Not implemented ----------------'.format(datetime.now()))
         message = 'get_unfinished_block_headers:  ---------------- Not implemented ----------------'
         logging.error(message)
-        # print(json.dumps(message))
-        # print("x" * 100)
+
 
 def get_unfinished_block_headersf(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
         message = 'get_unfinished_block_headers:  --------------- Not implemented ----------------'
         logging.error(message)
-        # print(json.dumps(message))
-        # print("x" * 100)
 
 
 def get_blocks(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
         message = 'get_blocks:  --------------------------------- Not implemented ----------------'
         logging.error(message)
-        # print(json.dumps(message))
-        # print("x" * 100)
+
+
+def log_in(message, client):
+    if cp.message_debug[inspect.stack()[0][3]] == "True":
+        logging.error(message)
+        message = 'log_in:  --------------------------------- Not implemented ----------------'
+        logging.error(message)
+    else:
+        print(json.dumps(message))
+        message = 'log_in ERROR:  --------------------------------- Not implemented ----------------'
+        logging.error(message)
