@@ -214,7 +214,7 @@ def register_service(message):
                                                                                   message['data']['success'])
                 logging.info(log_message)
         else:
-            log_message = '{0}: ***************Unhandled register_service message: {1}'\
+            log_message = '{0}: ***************Unhandled register_service message: {1}' \
                 .format(inspect.stack()[0][3], json.dumps(message, indent=4, sort_keys=True))
             logging.error(log_message)
 
@@ -244,7 +244,8 @@ def get_blockchain_state(message, client):
 
         if 'infused_challenged_vdf_output' in message['data']['blockchain_state']['peak']:
             if "data" in message['data']['blockchain_state']['peak']['infused_challenge_vdf_output']:
-                infused_challenge_vdf_output = message['data']['blockchain_state']['peak']['infused_challenge_vdf_output']['data']
+                infused_challenge_vdf_output = \
+                message['data']['blockchain_state']['peak']['infused_challenge_vdf_output']['data']
             else:
                 infused_challenge_vdf_output = "N/A"
         else:
@@ -334,6 +335,20 @@ def get_height_info(message):
         logging.error(traceback.format_exc())
 
 
+def unlock_keyring():
+    success = True
+    # success = message['success']
+    log_message = 'key ring unlocked: {0}'.format(success)
+    if success:
+        logging.info(log_message)
+    else:
+        logging.error(log_message)
+
+
+def keyring_status_changed():
+    log_message = 'unlocked keyring'
+    logging.info(log_message)
+
 def get_wallet_balance(message, client):
     try:
         # logging.error(json.dumps(message, indent=4, sort_keys=True))
@@ -356,7 +371,7 @@ def get_wallet_balance(message, client):
         ms.message_send(client, message_dic, c="")
         if cp.message_debug[inspect.stack()[0][3]] == "True":
             log_message = '{0}:  Confirmed Wallet Balance: {1} Max Spend Amount: {2} Pending Change: ' \
-                          '{3} Pending Coin Removal Cound: {4} Spendable Ballance: {5} Unconfirmed Wallet Balance: {6}'\
+                          '{3} Pending Coin Removal Cound: {4} Spendable Ballance: {5} Unconfirmed Wallet Balance: {6}' \
                           ' Unspent Coin Count {7}'.format(inspect.stack()[0][3], confirmed_wallet_balance,
                                                            max_send_amount, pending_change, pending_coin_removal_count,
                                                            spendable_balance, unconfirmed_wallet_balance,
@@ -366,6 +381,7 @@ def get_wallet_balance(message, client):
         message = '{0}: Got message:'.format(inspect.stack()[0][3])
         logging.error(json.dumps(message, indent=4, sort_keys=True))
         logging.error(traceback.format_exc())
+
 
 def get_wallet_balance_rpc(message, client):
     try:
@@ -383,7 +399,7 @@ def get_wallet_balance_rpc(message, client):
             message_dic[variable2publish] = eval(variable2publish)
         ms.message_send(client, message_dic, c="")
         log_message = '{0}:  Confirmed Wallet Balance: {1} Max Spend Amount: {2} Pending Change: ' \
-                      '{3} Pending Coin Removal Cound: {4} Spendable Ballance: {5} Unconfirmed Wallet Balance: {6}'\
+                      '{3} Pending Coin Removal Cound: {4} Spendable Ballance: {5} Unconfirmed Wallet Balance: {6}' \
                       ' Unspent Coin Count {7}'.format(inspect.stack()[0][3], confirmed_wallet_balance,
                                                        max_send_amount, pending_change, pending_coin_removal_count,
                                                        spendable_balance, unconfirmed_wallet_balance,
@@ -393,6 +409,7 @@ def get_wallet_balance_rpc(message, client):
         message = '{0}: Got message:'.format(inspect.stack()[0][3])
         logging.error(json.dumps(message, indent=4, sort_keys=True))
         logging.error(traceback.format_exc())
+
 
 def get_unfinished_block_headers(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
@@ -421,4 +438,3 @@ def not_implemetnted_yet(message, client):
     except:
         log_message = 'unhandled error message in:{0}'.format(datetime.now(), inspect.stack()[0][3])
         logging.error(log_message)
-

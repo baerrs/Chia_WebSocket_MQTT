@@ -177,11 +177,13 @@ def on_message(ws, message):
         chia_ws_commands.get_blocks(message)
     elif command == 'get_height_info':
        chia_ws_commands.get_height_info(message)
+    elif command == 'unlock_keyring':
+        chia_ws_commands.unlock_keyring()
+    elif command == 'keyring_status_changed':
+        chia_ws_commands.keyring_status_changed()
     else:
-        message = "connected OK Returned code={0}".format(rc)
-        #logging.critical("x" * 100)
-        logging.critical(message)
-        logging.critical(json.dumps(message))
+        # logging.critical(message)
+        # logging.critical(json.dumps(message))
         message ='{0}: Unhandled message: {1}'.format(inspect.stack()[0][3],
                                                         json.dumps(message, indent=4, sort_keys=True))
         logging.critical(message)
