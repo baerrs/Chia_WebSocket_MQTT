@@ -22,7 +22,7 @@ if os.path.isdir(logdir):
 else:
     os.mkdir(logdir)
 handler = logging.handlers.RotatingFileHandler(
-    filename=settings.log_file, maxBytes=(1048576 * 5), backupCount=7)
+    filename=settings.log_file, maxBytes=(1048576 * 1024), backupCount=7)
 handler.setFormatter(formatter)
 # sends to stdout
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -45,7 +45,7 @@ def new_farming_info(message, client):
         signage_point = message['data']['farming_info']['signage_point']
         timestamp = message['data']['farming_info']['timestamp']
         total_plots = message['data']['farming_info']['total_plots']
-        destination = message['destination']
+        # destination = message['destination']
         origin = message['origin']
         request_id = message['request_id']
         challenge_hash = str(challenge_hash)[2:10]
@@ -143,7 +143,7 @@ def new_signage_point(message, client):
     signage_point_index = message['data']['signage_point']['signage_point_index']
     sub_slot_iters = message['data']['signage_point']['sub_slot_iters']
     success = message['data']['success']
-    destination = message['destination']
+    # destination = message['destination']
     origin = message['origin']
     request_id = message['request_id']
 
@@ -164,6 +164,9 @@ def new_signage_point(message, client):
         logging.error(log_message)
         log_message = traceback.print_exc()
         logging.error(log_message)
+        print("-----")
+        logging.error(message)
+        print("-----")
         log_message = json.dumps(message, indent=4, sort_keys=True)
         logging.error(log_message)
 
@@ -196,7 +199,7 @@ def state_changed(message):
 def register_service(message):
     command = message['command']
     success = message['data']['success']
-    destination = message['destination']
+    # destination = message['destination']
     origin = message['origin']
     request_id = message['request_id']
     try:
@@ -268,7 +271,7 @@ def get_blockchain_state(message, client):
         sync_tip_height = message['data']['blockchain_state']['sync']['sync_tip_height']
         synced = message['data']['blockchain_state']['sync']['synced']
         success = message['data']['success']
-        destination = message['destination']
+        # destination = message['destination']
         origin = message['origin']
         request_id = message['request_id']
         peak_height = message['data']['blockchain_state']['peak']['height']
@@ -312,15 +315,16 @@ def get_blockchain_state(message, client):
 
 
 def get_height_info(message):
+    pass
     try:
         command = message['command']
         height = message['data']['height']
-        destination = message['destination']
+        # destination = message['destination']
         origin = message['origin']
         request_id = message['request_id']
         if cp.message_debug[inspect.stack()[0][3]] == "True":
             message = 'get_height_info:  height: {0}, destination: {1}, origin: {2}, request_id: {3}'.format(height,
-                                                                                                             destination,
+                                                                                                             "destination",
                                                                                                              origin,
                                                                                                              request_id)
             logging.info(message)
@@ -341,7 +345,7 @@ def get_wallet_balance(message, client):
         spendable_balance = message['data']['wallet_balance']['spendable_balance']
         unconfirmed_wallet_balance = message['data']['wallet_balance']['unconfirmed_wallet_balance']
         unspent_coin_count = message['data']['wallet_balance']['unspent_coin_count']
-        destination = message['destination']
+        # destination = message['destination']
         origin = message['origin']
         request_id = message['request_id']
         message_dic = {}
@@ -392,28 +396,29 @@ def get_wallet_balance_rpc(message, client):
 
 def get_unfinished_block_headers(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
-        message = 'get_unfinished_block_headers:  ---------------- Not implemented ----------------'
-        logging.error(message)
-
-
-def get_unfinished_block_headersf(message):
-    if cp.message_debug[inspect.stack()[0][3]] == "True":
-        message = 'get_unfinished_block_headers:  --------------- Not implemented ----------------'
-        logging.error(message)
+        message = 'get_unfinished_block_headers:  Received, not processed in chia_ws_commands'
+        logging.warning(message)
 
 
 def get_blocks(message):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
-        message = 'get_blocks:  --------------------------------- Not implemented ----------------'
-        logging.error(message)
+        message = 'get_blocks:  Received, not processed in chia_ws_commands'
+        logging.warning(message)
 
 
 def log_in(message, client):
     if cp.message_debug[inspect.stack()[0][3]] == "True":
-        logging.error(message)
-        message = 'log_in:  --------------------------------- Not implemented ----------------'
-        logging.error(message)
-    else:
-        print(json.dumps(message))
-        message = 'log_in ERROR:  --------------------------------- Not implemented ----------------'
-        logging.error(message)
+        message = 'log_in:  Received, not processed in chia_ws_commands'
+        logging.warning(message)
+
+
+def not_implemetnted_yet(message, client):
+    try:
+        command = message['command']
+        log_message = '{0} ------------------- {0} is not implemented yet -------------------'.format(str(command))
+        logging.info(log_message)
+        logging.info(json.dumps(message))
+    except:
+        log_message = 'unhandled error message in:{0}'.format(datetime.now(), inspect.stack()[0][3])
+        logging.error(log_message)
+

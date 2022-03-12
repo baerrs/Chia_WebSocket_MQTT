@@ -14,20 +14,22 @@ from config import settings
 
 logging.basicConfig(filename=settings.log_file, filemode='w',format='%(asctime)s -%(levelname)s- %(message)s', level=logging.INFO)
 
-def on_connect(client, userdata, flags, rc):
-    if rc==0:
-        client.connected_flag=True #set flag
-        message = "connected OK Returned code={0}".format(rc)
-        logging.info(message)
-        # logging.debug('This is a debug message')
-        # logging.info('This is an info message')
-        # logging.warning('This is a warning message')
-        # logging.error('This is an error message')
-        # logging.critical('This is a critical message')
-        #client.subscribe(topic)
-    else:
-        message = "Bad connection Returned code={0}".format(rc)
-        logging.error(message)
+def on_connect(client, userdata, flags, rc=""):
+    try:
+        if rc==0:
+            client.connected_flag=True #set flag
+            message = "connected OK Returned code={0}".format(rc)
+            logging.info(message)
+        else:
+            message = "Bad connection Returned code={0}".format(rc)
+            logging.error(message)
+    except:
+        print(client)
+        print(userdata)
+        print(flags)
+        print(rc)
+
+
 
 
 # websocket.enableTrace(True).
@@ -51,62 +53,62 @@ def on_message(ws, message):
     elif command == 'get_unfinished_block_headers':
         chia_ws_commands.get_unfinished_block_headers(message)
     elif command == 'get_signage_points':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_signage_points', 'data': {'signage_points': [], 'success': True},
     #  'destination': 'wallet_ui', 'origin': 'chia_farmer',
     #  'request_id': 'bb42b842170b16a7fd1f38de84d16587f046e13b3fb6ada506b3e4d7fdbd1979'}
     elif command == 'ping':
-        x=1
+       chia_ws_commands.not_implemetnted_yet(message, client)
     elif command == 'get_sync_status':
-        x = 1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # ping
     # {'ack': True, 'command': 'ping', 'data': {'success': True}, 'destination': 'wallet_ui', 'origin': 'chia_harvester',
     #  'request_id': '70e28864ad9e5823c427b65d13c4f48a64d8b3661162746113539641afa17c7b'}
     #
     elif command == 'get_harvesters':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_harvesters', 'data': {'harvesters': [], 'success': True}, 'destination': 'wallet_ui',
     #  'origin': 'chia_farmer', 'request_id': '415c7fc16a05e87724b3d7e4c9ce2e3b7badbe620a04d65b732e01047e2d7987'}
     #
     elif command == 'get_plot_directories':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_plot_directories', 'data': {'directories': ['C:\\chia-plot'], 'success': True},
     #  'destination': 'wallet_ui', 'origin': 'chia_harvester',
     #  'request_id': '41291d340c2c7cd4917200242f2fba32cb890c483c87f7fe4ef0ba26fca612fc'}
     #
     elif command == 'get_plots':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     elif command =='get_public_keys':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_public_keys',
     #  'data': {'public_key_fingerprints': [2817487474, 123781786], 'success': True}, 'destination': 'wallet_ui',
     #  'origin': 'chia_wallet', 'request_id': '2d3407cda8aa1f5501c03ebe3d5e8e9a7feec6730eea248ec8941cb5f2a8601f'}
 
     elif command == 'log_in':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'log_in', 'data': {'fingerprint': 2817487474, 'success': True}, 'destination': 'wallet_ui',
     #  'origin': 'chia_wallet', 'request_id': '0a263e961e39360916366e63bfa6dfcba6d7a67dcdfae21890fbac17cbb8aa60'}
 
     elif command == 'get_wallets':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_wallets',
     #  'data': {'success': True, 'wallets': [{'data': '', 'id': 1, 'name': 'Chia Wallet', 'type': 0}]},
     #  'destination': 'wallet_ui', 'origin': 'chia_wallet',
     #  'request_id': 'e47fa670c813e8bdc7aa4cd0424ae745bb4c8679431125bd1774491499ea736f'}
 
     elif command == 'get_network_info':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_network_info',
     #  'data': {'network_name': 'mainnet', 'network_prefix': 'xch', 'success': True}, 'destination': 'wallet_ui',
     #  'origin': 'chia_wallet', 'request_id': '6192712fccbee44196f70be54dba7dec316b2404d12c56423181970db1ce1e9b'}
 
     elif command == 'get_all_trades':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_all_trades', 'data': {'success': True, 'trades': []}, 'destination': 'wallet_ui',
     #  'origin': 'chia_wallet', 'request_id': '13d87cece0ea69e548b7323c21b789e260ebd44cc9bfbbadd29d0fb56c4f3b90'}
 
     elif command == 'get_farmed_amount':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message,client)
     # {'ack': True, 'command': 'get_farmed_amount',
     #  'data': {'farmed_amount': 0, 'farmer_reward_amount': 0, 'fee_amount': 0, 'last_height_farmed': 0,
     #           'pool_reward_amount': 0, 'success': True}, 'destination': 'wallet_ui', 'origin': 'chia_wallet',
@@ -114,7 +116,7 @@ def on_message(ws, message):
 
     elif command == 'get_wallet_balance':
         chia_ws_commands.get_wallet_balance(message, client)
-        x=1
+
     # {'ack': True, 'command': 'get_wallet_balance', 'data': {'success': True,
     #                                                         'wallet_balance': {'confirmed_wallet_balance': 0,
     #                                                                            'max_send_amount': 0,
@@ -128,20 +130,20 @@ def on_message(ws, message):
     #  'request_id': '71ddf8ce6309bd323b9660d924114b5b52ccb4f42e60f55d2a830859fa03fba2'}
 
     elif command == 'get_transactions':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_transactions', 'data': {'success': True, 'transactions': [], 'wallet_id': 1},
     #  'destination': 'wallet_ui', 'origin': 'chia_wallet',
     #  'request_id': '3710dc313571f99ed3ba31f1c60fdfbbedda9dd41c0a6a327090df01ba4ba30a'}
 
     elif command == 'get_next_address':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_next_address',
     #  'data': {'address': 'xch1tvkl7x53dvksdev3jcx72ykfujklshcu37r0fuldgjd48r03sdhqzumz7t', 'success': True,
     #           'wallet_id': 1}, 'destination': 'wallet_ui', 'origin': 'chia_wallet',
     #  'request_id': 'e015e25204f221f25139c6ae4d77ccacbe8c791d3b0907983f841f569e44df6e'}
 
     elif command == 'get_public_keys':
-        x=1
+        chia_ws_commands.not_implemetnted_yet(message, client)
     # {'ack': True, 'command': 'get_public_keys',
     #  'data': {'public_key_fingerprints': [2817487474, 123781786], 'success': True}, 'destination': 'wallet_ui',
     #  'origin': 'chia_wallet', 'request_id': '359967a5044423e29b27c99548f38174330bed26e7d2256060e25cbf112826f1'}
@@ -174,7 +176,7 @@ def on_message(ws, message):
     elif command == 'get_blocks':
         chia_ws_commands.get_blocks(message)
     elif command == 'get_height_info':
-        chia_ws_commands.get_height_info(message)
+       chia_ws_commands.get_height_info(message)
     else:
         message = "connected OK Returned code={0}".format(rc)
         #logging.critical("x" * 100)
@@ -184,15 +186,17 @@ def on_message(ws, message):
                                                         json.dumps(message, indent=4, sort_keys=True))
         logging.critical(message)
         #logging.critical("x" * 100)
-    ''' I dont like this method to get the wallet balance, but I haven't figured out how to get it to broadcast from the 
-    wallet with out logging in the the chia GUI, so this is it for now...  I do have a question on chia's git hub about this
-    Hopefully someone smarting than me will help out. Maybe'''
-    c = c + 1
-    if c == 1:
-        message = wallet_rpc.get_balance()
-        chia_ws_commands.get_wallet_balance_rpc(message, client)
-    elif c >= 20:
-        c = 0
+    ''' I dont think i need this anymore.  I've figured out how to get the wallet balance, at least at the start up of this application'''
+    # c = c + 1
+    # if c == 1:
+    #     pass
+        # message = {"destination": "daemon", "command": "register_service", "request_id": "123456w", "origin": "",
+        #            "data": {"service": 'wallet_ui'}}
+        # wsapp.send(json.dumps(message))
+        # message = wallet_rpc.get_balance()
+        # chia_ws_commands.get_wallet_balance_rpc(message, client)
+    # elif c >= 20:
+    #     c = 0
 
 
 def on_error(self, error):
@@ -214,27 +218,26 @@ def on_open(self):
     message = {"destination": "daemon", "command": "register_service", "request_id": "123456w", "origin": "",
                "data": {"service": 'wallet_ui'}}
     on_send_message(self, message)
-    message = {"destination": "full_node", "command": "get_blockchain_state", "request_id": "123456ca", "origin": "",
-               "data": {"service": 'full_node'}}
+    message = {"destination": "daemon", "command": "unlock_keyring",
+               "request_id": "123456ca", "origin": "", "data": {"key": settings.key_pashprase}}
     on_send_message(self, message)
 
 
 def on_send_message(ws, message):
     log_message = '{0}: Sent Message: Registration'.format(inspect.stack()[0][3])
     logging.info(log_message)
-    # print('{0}: {1}: Sent Message: Registration'.format(datetime.now(), inspect.stack()[0][3]))
     wsapp.send(json.dumps(message))
 
 
 def on_ping(ws, data):
-    x=1
-    # print('{0}: {1}: Got ping'.format(datetime.now(), inspect.stack()[0][3]))
+    pass
+    # chia_ws_commands.not_implemetnted_yet(message, client)
+    logging.info("Got ping")
 
 
-
-client = mqtt.Client()             #create new instance
-client.on_connect=on_connect  #bind call back function
-client.connect(host='173.230.128.181', port=1883)               #connect to broker
+client = mqtt.Client()             #create a mqtt instance
+client.on_connect=on_connect  # bind call back function
+client.connect(host=settings.mqtt_server, port=settings.mqtt_port)               #connect to broker
 client.loop_start()  #Start loop
 time.sleep(4) # Wait for connection setup to complete
 # print("testing")
@@ -242,8 +245,8 @@ time.sleep(4) # Wait for connection setup to complete
 debug = True
 
 
-message = "---------------------Starting Chia Websocket Client---------------------"
-logging.info(message)
+start_message = "---------------------Starting Chia Websocket Client---------------------"
+logging.info(start_message)
 wsapp = websocket.WebSocketApp("wss://localhost:55400",
                                on_open=on_open,
                                on_message=on_message,
