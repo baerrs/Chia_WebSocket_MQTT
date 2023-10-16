@@ -14,3 +14,5 @@ def get_balance():
     cert = ('ssl/wallet/private_wallet.crt', 'ssl/wallet/private_wallet.key')
     response = json.loads(requests.post(url, data=data, headers=headers, cert=cert, verify=False).text)
     return response
+# Print the Response
+print(get_balance())
